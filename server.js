@@ -22,6 +22,7 @@ app.post("/chat", async (req,res) => {
             prompt: prompt,
             max_tokens: 512, // Adjust parameter name from max_token to max_tokens
             temperature: 0,
+            prompt: `Return a 3 question based on the ${prompt} topic asked`,
         });
         res.send(completion.choices[0].text); // Adjusted the response accessing method
     } catch (error) {
