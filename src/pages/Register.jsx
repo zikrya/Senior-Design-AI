@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router";
 
 const Register = () => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -20,6 +22,7 @@ const Register = () => {
       const data = await response.json();
       if (response.ok) {
         console.log('Registration successful', data);
+        navigate("/");
         // Redirect to login page or display success message
       } else {
         console.error('Registration failed', data.message);

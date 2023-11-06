@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router";
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -19,6 +21,7 @@ const Login = () => {
       const data = await response.json();
       if (response.ok) {
         console.log('Login successful', data);
+        navigate("/");
         // Redirect to home page or store the JWT token if you're using it
       } else {
         console.error('Login failed', data.message);
