@@ -2,12 +2,16 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import OpenAI from 'openai';
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
+
 
 const openai = new OpenAI({
   apiKey: "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", // Using environment variable for security
 });
 
 const app = express();
+const prisma = new PrismaClient();
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -22,7 +26,7 @@ app.post("/chat", async (req,res) => {
             prompt: prompt,
             max_tokens: 512, // Adjust parameter name from max_token to max_tokens
             temperature: 0,
-            prompt: `Return a 3 question based on the ${prompt} topic asked`,
+            prompt: `Create 3 multiple-choice questions with options on the topic of '${prompt}'. Each question should have one correct answer and three incorrect options.`,
         });
         res.send(completion.choices[0].text); // Adjusted the response accessing method
     } catch (error) {
@@ -36,6 +40,61 @@ app.post("/chat", async (req,res) => {
         }
     }
 });
+
+const saltRounds = 10;
+
+app.post('/register', async (req, res) => {
+  try {
+    const { email, name, password } = req.body;
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Save the new user in the database
+    const user = await prisma.user.create({
+      data: {
+        email,
+        name,
+        password: hashedPassword,
+      },
+    });
+
+    res.status(201).json({ message: 'User created!', userId: user.id });
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({ message: 'Error registering user' });
+  }
+});
+
+app.post('/login', async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      // Find the user by email
+      const user = await prisma.user.findUnique({
+        where: { email },
+      });
+
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Compare the password
+      const isMatch = await bcrypt.compare(password, user.password);
+
+      if (!isMatch) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+
+      // Here, you'd return a session token or JWT token
+      // For simplicity, let's just return a success message
+      res.json({ message: 'Login successful', userId: user.id });
+
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ message: 'Error logging in user' });
+    }
+  });
 
 const PORT = 8020;
 
