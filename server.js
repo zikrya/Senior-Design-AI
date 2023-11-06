@@ -26,7 +26,7 @@ app.post("/chat", async (req,res) => {
             prompt: prompt,
             max_tokens: 512, // Adjust parameter name from max_token to max_tokens
             temperature: 0,
-            prompt: `Create 3 multiple-choice questions with options on the topic of '${prompt}'. Each question should have one correct answer and three incorrect options.`,
+            prompt: `Create a multiple-choice question about '${prompt}' suitable for a quiz. Format the response in JSON, including the question text, an array of options prefixed with 'A', 'B', 'C', and 'D', and the index of the correct option. The correct option should be the first in the array.`,
         });
         res.send(completion.choices[0].text); // Adjusted the response accessing method
     } catch (error) {
