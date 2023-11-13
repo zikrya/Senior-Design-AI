@@ -5,18 +5,22 @@ import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import { Link } from 'react-router-dom';
+import Navbar from './components/navbar'
+import Quiz from './pages/Quiz';
 
 function App() {
 
   return (
     <>
         <Router>
+          <Navbar />
           <Routes>
           <Route exact path="/" element={<Home/>} />
           <Route exact path="/login" element={<Login/>} />
-          <Route exact path="/register" element={
-          <Register/>} />
-           <Route exact path="/dashboard" element={<Dashboard/>} />
+          <Route exact path="/register" element={<Register/>} />
+          <Route exact path="/dashboard" element={<Dashboard/>} />
+          <Route exact path="/quiz" element={<Quiz/>} />
           </Routes>
         </Router>
     </>
