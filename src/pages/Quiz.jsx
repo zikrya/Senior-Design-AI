@@ -1,11 +1,9 @@
-import ChatGpt from '../components/ChatGpt'
+import ChatGpt from "../components/ChatGpt";
+
 const Quiz = () => {
     return (
         <>
-        quiz
         <ChatGpt/>
-        
-        
         </>
      );
 }

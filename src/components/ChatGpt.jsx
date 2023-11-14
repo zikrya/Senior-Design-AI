@@ -64,7 +64,7 @@ const ChatGpt = () => {
             <div className="w-full md:w-2/3 mx-auto p-5 bg-white rounded-lg shadow-md">
                 <div className="flex items-center justify-between">
                     <div className="w-full">
-                        <h2 className="text-center text-3xl font-extrabold text-green-400">Quiz Generator</h2>
+                        <h2 className="text-center text-3xl font-extrabold text-indigo-400">Quiz Generator</h2>
                     </div>
                 </div>
                 <br />
