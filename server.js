@@ -26,7 +26,7 @@ app.post("/chat", async (req,res) => {
             prompt: prompt,
             max_tokens: 512, // Adjust parameter name from max_token to max_tokens
             temperature: 0,
-            prompt: `Create a multiple-choice question about '${prompt}' suitable for a quiz. Format the response in JSON, including the question text, an array of options prefixed with 'A', 'B', 'C', and 'D', and the index of the correct option. The correct option should be the first in the array.`,
+            prompt: `Create a JSON array of 5 multiple-choice questions about '${prompt}' suitable for a quiz. Each object in the array should include the question text, an array of options prefixed with 'A', 'B', 'C', and 'D', and the correct option index. Ensure the correct option is at the index specified in the 'correct_option_index' field.`,
         });
         res.send(completion.choices[0].text); // Adjusted the response accessing method
     } catch (error) {
@@ -101,6 +101,5 @@ const PORT = 8020;
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
 });
-
 
 
