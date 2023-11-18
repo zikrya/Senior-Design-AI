@@ -21,21 +21,25 @@ const Login = () => {
       const data = await response.json();
       if (response.ok) {
         console.log('Login successful', data);
-        navigate('/');
-        // Redirect to home page or store the JWT token if you're using it
+
+        // Store the JWT token in local storage
+        localStorage.setItem('token', data.token);
+
+        navigate('/'); // Redirect to home page or dashboard
       } else {
         console.error('Login failed', data.message);
-        // Display error message to the user
+        // Display error message to the user (consider adding state for this)
       }
     } catch (error) {
       console.error('There was an error!', error);
+      // Handle errors (e.g., network issues)
     }
   };
 
   return (
     <body className="leading-normal tracking-normal text-gray-900" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
       <div className="min-h-screen flex items-center justify-center bg-right bg-cover" style={{ backgroundImage: "url('bg.svg')" }}>
-        
+
         {/* Form */}
         <form
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
