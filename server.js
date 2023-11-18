@@ -23,15 +23,16 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 app.post("/chat", async (req,res) => {
     try {
-        const {prompt} = req.body;
+      const { topic, difficulty } = req.body;
+
+      const openaiPrompt = `Create a JSON array of ${difficulty} level of difficulty 5 multiple-choice questions about '${topic}' suitable for a quiz. Each object in the array should include the question text, an array of options prefixed with 'A', 'B', 'C', and 'D', and the correct option index. Ensure the correct option is at the index specified in the 'correct_option_index' field.`
 
         // Adjusted the code as per new completion creation method
         const completion = await openai.completions.create({
             model: "text-davinci-003",
-            prompt: prompt,
             max_tokens: 512, // Adjust parameter name from max_token to max_tokens
             temperature: 0,
-            prompt: `Create a JSON array of 5 multiple-choice questions about '${prompt}' suitable for a quiz. Each object in the array should include the question text, an array of options prefixed with 'A', 'B', 'C', and 'D', and the correct option index. Ensure the correct option is at the index specified in the 'correct_option_index' field.`,
+            prompt: openaiPrompt,
         });
         res.send(completion.choices[0].text); // Adjusted the response accessing method
     } catch (error) {
