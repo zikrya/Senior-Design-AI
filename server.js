@@ -130,6 +130,14 @@ app.get('/protected-route', authenticateToken, (req, res) => {
   res.json({ message: 'Access to protected data!' });
 });
 
+app.post('/logout', (req, res) => {
+  // Clear the token on the client side
+  res.clearCookie('token');
+
+  // Send a response indicating successful logout
+  res.json({ message: 'Logout successful' });
+});
+
 const PORT = 8020;
 
 app.listen(PORT, () => {
