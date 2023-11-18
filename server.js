@@ -1,10 +1,13 @@
 import express from 'express';
+import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import OpenAI from 'openai';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
+dotenv.config();
 
 const openai = new OpenAI({
   apiKey: "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", // Using environment variable for security
@@ -15,6 +18,8 @@ const prisma = new PrismaClient();
 
 app.use(bodyParser.json());
 app.use(cors());
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 app.post("/chat", async (req,res) => {
     try {
@@ -47,6 +52,15 @@ app.post('/register', async (req, res) => {
   try {
     const { email, name, password } = req.body;
 
+    // First, check if the user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already in use' });
+    }
+
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -66,35 +80,55 @@ app.post('/register', async (req, res) => {
   }
 });
 
+
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+
+  if (token == null) return res.sendStatus(401); // if no token found
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+      if (err) return res.sendStatus(403); // invalid token
+      req.user = user;
+      next();
+  });
+};
+
 app.post('/login', async (req, res) => {
-    try {
+  try {
       const { email, password } = req.body;
 
       // Find the user by email
       const user = await prisma.user.findUnique({
-        where: { email },
+          where: { email },
       });
 
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+          return res.status(404).json({ message: 'User not found' });
       }
 
       // Compare the password
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        return res.status(401).json({ message: 'Invalid credentials' });
+          return res.status(401).json({ message: 'Invalid credentials' });
       }
 
-      // Here, you'd return a session token or JWT token
-      // For simplicity, let's just return a success message
-      res.json({ message: 'Login successful', userId: user.id });
+      // Create a JWT token
+      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
 
-    } catch (error) {
+      // Send the token back to the client
+      res.json({ message: 'Login successful', token });
+
+  } catch (error) {
       console.error('Login error:', error);
       res.status(500).json({ message: 'Error logging in user' });
-    }
-  });
+  }
+});
+app.get('/protected-route', authenticateToken, (req, res) => {
+  // Access user information from req.user
+  res.json({ message: 'Access to protected data!' });
+});
 
 const PORT = 8020;
 
