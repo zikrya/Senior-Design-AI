@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,9 +6,32 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  name     String?
-  password String
+  id            Int             @id @default(autoincrement())
+  email         String          @unique
+  name          String?
+  password      String
+  userQuestions UserQuestions[]
 }
+
+model Question {
+  id            Int             @id @default(autoincrement())
+  text          String
+  topic         String
+}
+
+model UserQuestions {
+  id                  Int      @id @default(autoincrement())
+  userId              Int
+  questionText        String
+  options             Json     // Changed from String[] to Json
+  correctOptionIndex  Int
+  selectedOptionIndex Int?
+  isCorrect           Boolean?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  user                User     @relation(fields: [userId], references: [id])
+}
+
+

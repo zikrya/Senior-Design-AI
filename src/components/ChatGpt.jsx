@@ -59,6 +59,27 @@ const ChatGpt = () => {
     setResponses(newResponses);
   };
 
+  const handleSaveResponses = () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('You must be logged in to save responses.');
+      return;
+    }
+
+    axios.post('http://localhost:8020/save-questions', { questions: responses }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      console.log('Responses saved successfully:', response.data);
+    })
+    .catch(error => {
+      console.error('Error saving responses:', error);
+      setError('Error saving responses. Please try again.');
+    });
+  };
+
   return (
     <div>
       <div className="w-full md:w-2/3 mx-auto p-5 bg-white rounded-lg shadow-md">
@@ -88,6 +109,7 @@ const ChatGpt = () => {
               <option value="Advanced">Advanced</option>
             </select>
             <button type="submit" className="px-4 py-2 bg-blue-500 text-white">Submit</button>
+            <button onClick={handleSaveResponses} className="px-4 py-2 bg-green-500 text-white">Save Responses</button>
           </form>
         </div>
         <div className="mt-8 space-y-8">
