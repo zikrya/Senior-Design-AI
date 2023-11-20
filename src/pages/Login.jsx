@@ -26,6 +26,7 @@ const Login = () => {
         localStorage.setItem('token', data.token);
 
         navigate('/'); // Redirect to home page or dashboard
+        window.location.reload(); // Refreshes the page
       } else {
         console.error('Login failed', data.message);
         // Display error message to the user (consider adding state for this)
@@ -37,7 +38,7 @@ const Login = () => {
   };
 
   return (
-    <body className="leading-normal tracking-normal text-gray-900" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
+    <div className="leading-normal tracking-normal text-gray-900" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
       <div className="min-h-screen flex items-center justify-center bg-right bg-cover" style={{ backgroundImage: "url('bg.svg')" }}>
 
         {/* Form */}
@@ -78,8 +79,10 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-          </div>
-          <div className="flex items-center justify-between">
+          </div >
+          <div 
+          className="flex items-center justify-center bg-right bg-cover"
+          >
             <button
               className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
@@ -87,9 +90,10 @@ const Login = () => {
               Login
             </button>
           </div>
+          <p style={{padding:"10px"}}>Don't have an account? <a href='/register' style={{textDecoration:"underline"}}>Register</a></p>
         </form>
       </div>
-    </body>
+    </div>
   );
 };
 
