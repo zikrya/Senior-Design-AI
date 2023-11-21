@@ -66,7 +66,8 @@ const ChatGpt = () => {
       return;
     }
 
-    axios.post('http://localhost:8020/save-questions', { questions: responses }, {
+    axios.post('http://localhost:8020/save-questions', { questions: responses,
+  topic: prompt }, {
       headers: {
         Authorization: `Bearer ${token}`
       }

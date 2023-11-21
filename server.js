@@ -141,8 +141,8 @@ app.post('/logout', (req, res) => {
 
 app.post('/save-questions', authenticateToken, async (req, res) => {
   try {
-    const { questions } = req.body;
-    const userId = req.user.userId; // Extract userId from the authenticated user
+    const { questions, topic } = req.body; // Extract topic from the request body
+    const userId = req.user.userId;
 
     await Promise.all(questions.map(async (question) => {
       await prisma.userQuestions.create({
@@ -152,7 +152,8 @@ app.post('/save-questions', authenticateToken, async (req, res) => {
           options: question.options,
           correctOptionIndex: question.correct_option_index,
           selectedOptionIndex: question.selectedOptionIndex,
-          isCorrect: question.isCorrect
+          isCorrect: question.isCorrect,
+          topic: topic // Include the topic in each userQuestions record
         }
       });
     }));
@@ -163,7 +164,6 @@ app.post('/save-questions', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Error saving questions', error: error.message });
   }
 });
-
 // Endpoint to fetch user-specific questions
 app.get('/user-questions', authenticateToken, async (req, res) => {
   try {
