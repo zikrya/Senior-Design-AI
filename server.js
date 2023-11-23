@@ -51,7 +51,7 @@ const saltRounds = 10;
 
 app.post('/register', async (req, res) => {
   try {
-    const { email, name, password } = req.body;
+    const { email, firstName, lastName, college, password } = req.body;
 
     // First, check if the user already exists
     const existingUser = await prisma.user.findUnique({
@@ -69,7 +69,9 @@ app.post('/register', async (req, res) => {
     const user = await prisma.user.create({
       data: {
         email,
-        name,
+        firstName,
+        lastName,
+        college,
         password: hashedPassword,
       },
     });
@@ -181,7 +183,22 @@ app.get('/user-questions', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Error fetching user questions' });
   }
 });
+app.get('/profile', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
 
+    const userProfile = await prisma.user.findUnique({
+      where: {
+        id: userId
+      }
+    });
+
+    res.status(200).json(userProfile);
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ message: 'Error fetching user profile' });
+  }
+});
 const PORT = 8020;
 
 app.listen(PORT, () => {
