@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router'
 
 const Improvements = () => {
   const [topics, setTopics] = useState([]);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -21,30 +23,40 @@ const Improvements = () => {
       setTopics(response.data);
     })
     .catch(error => {
-      console.error('Error fetching topics to review:', error);
+      console.error('Error fetching topics to review:', error.response || error);
       setError('Error fetching topics to review. Please try again.');
     });
   }, []);
 
   const handleRetry = (topic) => {
-    // Logic to retry the topic
-    console.log('Retry topic:', topic);
+    navigate('/quiz', { state: { topic } });
   };
 
   return (
-    <div>
-      <h2>Topics to Review</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <ul>
-        {topics.map((topic, index) => (
-          <li key={index}>
-            {topic}
-            <button onClick={() => handleRetry(topic)}>Retry</button>
-          </li>
-        ))}
-      </ul>
+    <div className="max-w-4xl mx-auto py-10">
+      <div className="bg-white rounded-lg shadow-lg p-5">
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">Topics to Review</h2>
+        {error && <p className="text-red-500">{error}</p>}
+        <ul className="list-disc pl-5">
+          {topics.map((topic, index) => (
+            <li key={index} className="mb-3">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-700">{topic}</span>
+                <button
+                  onClick={() => handleRetry(topic)}
+                  className="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  Retry
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
 
 export default Improvements;
+
+

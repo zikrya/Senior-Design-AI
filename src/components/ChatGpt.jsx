@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation} from 'react-router-dom';
 import axios from 'axios';
-
 const ChatGpt = () => {
   const [prompt, setPrompt] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
@@ -8,42 +8,37 @@ const ChatGpt = () => {
   const [error, setError] = useState("");
   const [userAnswers, setUserAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.topic) {
+      setPrompt(location.state.topic);
+      handleSubmit(null, location.state.topic);
+    }
+  }, [location]);
+
 
   const HTTP = "http://localhost:8020/chat";
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (e, retryTopic) => {
+    if (e) e.preventDefault();
     setError('');
     setUserAnswers({});
     setResponses([]);
     setSubmitted(false);
 
-    axios.post(`${HTTP}`, { topic: prompt, difficulty })
+    const topicToUse = retryTopic || prompt;
+    axios.post(`${HTTP}`, { topic: topicToUse, difficulty })
       .then((res) => {
-        if (res.status >= 400) {
-          setError(`Error: ${res.status}. ${res.statusText}`);
+        if (res.status === 200) {
+          setResponses(res.data);
         } else {
-          try {
-            let data = res.data;
-            if (!Array.isArray(data) || data.length === 0) {
-              throw new Error('Data is not an array or is empty');
-            }
-            data.forEach((item) => {
-              if (!item.question_text || !Array.isArray(item.options)) {
-                console.log('Invalid item:', item);
-                throw new Error('Each item must have a question_text and an options array');
-              }
-            });
-            setResponses(data);
-          } catch (error) {
-            console.error('Error processing data:', error);
-            setError('Error processing data: ' + error.message);
-          }
+          setError(`Error: ${res.status}. ${res.statusText}`);
         }
       })
       .catch((error) => {
-        console.error('Request Error:', error.response?.data || error);
-        setError(`An error occurred: ${error.response?.data?.message || error.message}`);
+        setError(`An error occurred: ${error.message}`);
+        console.error('Request Error:', error);
       });
   };
 
@@ -87,7 +82,7 @@ const ChatGpt = () => {
     });
   };
 
-  
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full md:w-2/3 mx-auto p-5 bg-white rounded-lg shadow-md">
@@ -127,12 +122,12 @@ const ChatGpt = () => {
         key={i}
         onClick={() => handleOptionClick(index, i)}
         disabled={submitted}
-        className={`block w-full text-left px-4 py-2 border rounded-full mb-4 
-                    ${submitted ? 
-                      (userAnswers[index] === i ? 
-                        (response.isCorrect ? 'bg-green-300' : 'bg-red-300') 
-                        : 'bg-gray-100') 
-                      : (userAnswers[index] === i ? 'bg-purple-300' : 'bg-gray-100')} 
+        className={`block w-full text-left px-4 py-2 border rounded-full mb-4
+                    ${submitted ?
+                      (userAnswers[index] === i ?
+                        (response.isCorrect ? 'bg-green-300' : 'bg-red-300')
+                        : 'bg-gray-100')
+                      : (userAnswers[index] === i ? 'bg-purple-300' : 'bg-gray-100')}
                     hover:bg-purple-200`}
       >
         {option}

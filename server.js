@@ -86,6 +86,7 @@ app.post('/register', async (req, res) => {
 
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
+  console.log("Auth Header:", authHeader);
   const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
   if (token == null) return res.sendStatus(401); // if no token found
@@ -201,6 +202,7 @@ app.get('/profile', authenticateToken, async (req, res) => {
 });
 app.get('/topics-to-review', authenticateToken, async (req, res) => {
   const userId = req.user.userId;
+  console.log("Endpoint /topics-to-review hit by User ID:", userId); // Added for debugging
 
   try {
     const topicsWithWrongAnswers = await prisma.userQuestions.groupBy({
