@@ -199,6 +199,34 @@ app.get('/profile', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Error fetching user profile' });
   }
 });
+app.get('/topics-to-review', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+
+  try {
+    const topicsWithWrongAnswers = await prisma.userQuestions.groupBy({
+      by: ['topic'],
+      where: {
+        userId: userId,
+        isCorrect: false,
+      },
+      _count: {
+        id: true,
+      },
+      having: {
+        id: {
+          _count: {
+            gte: 3
+          }
+        }
+      },
+    });
+
+    res.json(topicsWithWrongAnswers.map(topic => topic.topic));
+  } catch (error) {
+    console.error('Error fetching topics to review:', error);
+    res.status(500).json({ message: 'Error fetching topics to review' });
+  }
+});
 const PORT = 8020;
 
 app.listen(PORT, () => {
