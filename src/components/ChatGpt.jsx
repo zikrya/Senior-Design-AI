@@ -87,81 +87,73 @@ const ChatGpt = () => {
     });
   };
 
+  
   return (
-    <div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full md:w-2/3 mx-auto p-5 bg-white rounded-lg shadow-md">
-        <div className="flex items-center justify-between">
-          <div className="w-full">
-            <h2 className="text-center text-3xl font-extrabold text-indigo-400">Quiz Generator</h2>
-          </div>
+        <div className="text-center mb-6">
+          <h2 className="text-3xl font-extrabold text-indigo-500 mb-6">Quiz Generator</h2>
         </div>
-        <br />
-        <div className="flex justify-center items-center">
-          <form onSubmit={handleSubmit} className="flex border-2 rounded-lg overflow-hidden">
-            <input
-              type="text"
-              placeholder="Type any topic..."
-              value={prompt}
-              onChange={handlePrompt}
-              className="px-4 py-2 w-full"
-            />
-            <select
-              value={difficulty}
-              onChange={handleDifficultyChange}
-              className="px-4 py-2"
-            >
-              <option value="Easy">Easy</option>
-              <option value="Medium">Medium</option>
-              <option value="Hard">Hard</option>
-              <option value="Advanced">Advanced</option>
-            </select>
-            <button type="submit" className="px-4 py-2 bg-blue-500 text-white">Submit</button>
-          </form>
-        </div>
-        <div className="mt-8 space-y-8">
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          {responses.map((response, index) => (
-            <div key={index}>
-              <div className="flex items-start">
-                <p>{response.question_text}</p>
-              </div>
-              <div className="gap-4 md:grid-cols-2 mt-8">
-                {response.options && response.options.map((option, i) => (
-                  <button
-                    key={i}
-                    onClick={() => handleOptionClick(index, i)}
-                    disabled={submitted}
-                    className={`flex flex-row items-start rounded-lg p-3 cursor-pointer group mb-4 ${
-                      submitted
-                        ? userAnswers[index] === i
-                          ? response.isCorrect
-                            ? 'bg-green-300'
-                            : 'bg-red-300'
-                          : ''
-                        : userAnswers[index] === i
-                          ? 'bg-gray-200'
-                          : ''
-                    }`}
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
-          {responses.length > 0 && (
-            <button onClick={handleSubmitResponses} disabled={submitted} className="px-4 py-2 bg-orange-500 text-white">Submit Answers</button>
-          )}
-        </div>
+        <form onSubmit={handleSubmit} className="flex items-center mb-6">
+          <input
+            type="text"
+            placeholder="Type any topic..."
+            value={prompt}
+            onChange={handlePrompt}
+            className="px-4 py-2 w-full border rounded-md focus:outline-none focus:border-indigo-500"
+          />
+          <select
+            value={difficulty}
+            onChange={handleDifficultyChange}
+            className="px-4 py-2 ml-4 border rounded-md focus:outline-none focus:border-indigo-500"
+          >
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+          <button type="submit" className="px-4 py-2 ml-4 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none">
+            Submit
+          </button>
+        </form>
+
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+
+        {responses.map((response, index) => (
+  <div key={index} className="mb-8">
+    <p className="text-lg font-semibold mb-2">{response.question_text}</p>
+    {response.options.map((option, i) => (
+      <button
+        key={i}
+        onClick={() => handleOptionClick(index, i)}
+        disabled={submitted}
+        className={`block w-full text-left px-4 py-2 border rounded-full mb-4 
+                    ${submitted ? 
+                      (userAnswers[index] === i ? 
+                        (response.isCorrect ? 'bg-green-300' : 'bg-red-300') 
+                        : 'bg-gray-100') 
+                      : (userAnswers[index] === i ? 'bg-purple-300' : 'bg-gray-100')} 
+                    hover:bg-purple-200`}
+      >
+        {option}
+      </button>
+    ))}
+  </div>
+))}
+
+        {responses.length > 0 && (
+          <button
+            onClick={handleSubmitResponses}
+            disabled={submitted}
+            className="block mx-auto px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 focus:outline-none"
+          >
+            Submit Answers
+          </button>
+        )}
       </div>
     </div>
   );
 };
 
 export default ChatGpt;
-
-
-
-
-
 
