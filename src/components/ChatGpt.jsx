@@ -6,13 +6,17 @@ const ChatGpt = () => {
   const [difficulty, setDifficulty] = useState("Easy");
   const [responses, setResponses] = useState([]);
   const [error, setError] = useState("");
+  const [userAnswers, setUserAnswers] = useState({});
+  const [submitted, setSubmitted] = useState(false);
 
   const HTTP = "http://localhost:8020/chat";
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
+    setUserAnswers({});
     setResponses([]);
+    setSubmitted(false);
 
     axios.post(`${HTTP}`, { topic: prompt, difficulty })
       .then((res) => {
@@ -46,28 +50,30 @@ const ChatGpt = () => {
   const handlePrompt = (e) => setPrompt(e.target.value);
   const handleDifficultyChange = (e) => setDifficulty(e.target.value);
 
-  const handleOptionClick = (selectedOptionIndex, correctOptionIndex, responseIndex) => {
-    const newResponses = [...responses];
-    newResponses[responseIndex] = { ...newResponses[responseIndex], selectedOptionIndex };
-
-    if (selectedOptionIndex === correctOptionIndex) {
-      newResponses[responseIndex].isCorrect = true;
-    } else {
-      newResponses[responseIndex].isCorrect = false;
-    }
-
-    setResponses(newResponses);
+  const handleOptionClick = (responseIndex, selectedOptionIndex) => {
+    setUserAnswers({ ...userAnswers, [responseIndex]: selectedOptionIndex });
   };
 
-  const handleSaveResponses = () => {
+  const handleSubmitResponses = () => {
+    const evaluatedResponses = responses.map((response, index) => {
+      const userAnswer = userAnswers[index];
+      const isCorrect = userAnswer === response.correct_option_index;
+      return { ...response, isCorrect, selectedOptionIndex: userAnswer };
+    });
+
+    setResponses(evaluatedResponses);
+    setSubmitted(true);
+    handleSaveResponses(evaluatedResponses);
+  };
+
+  const handleSaveResponses = (evaluatedResponses) => {
     const token = localStorage.getItem('token');
     if (!token) {
       setError('You must be logged in to save responses.');
       return;
     }
 
-    axios.post('http://localhost:8020/save-questions', { questions: responses,
-  topic: prompt }, {
+    axios.post('http://localhost:8020/save-questions', { questions: evaluatedResponses, topic: prompt }, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -110,7 +116,6 @@ const ChatGpt = () => {
               <option value="Advanced">Advanced</option>
             </select>
             <button type="submit" className="px-4 py-2 bg-blue-500 text-white">Submit</button>
-            <button onClick={handleSaveResponses} className="px-4 py-2 bg-green-500 text-white">Save Responses</button>
           </form>
         </div>
         <div className="mt-8 space-y-8">
@@ -121,33 +126,32 @@ const ChatGpt = () => {
                 <p>{response.question_text}</p>
               </div>
               <div className="gap-4 md:grid-cols-2 mt-8">
-                {Array.isArray(response.options) ? (
-                  response.options.map((option, i) => (
-                    <button
-                      key={i}
-                      onClick={() => handleOptionClick(i, response.correct_option_index, index)}
-                      className={`flex flex-row items-start rounded-lg p-3 cursor-pointer group mb-4 ${
-                        response.selectedOptionIndex !== undefined
-                          ? response.selectedOptionIndex === i
-                            ? response.isCorrect
-                              ? 'bg-green-300'
-                              : 'bg-red-300'
-                            : ''
+                {response.options && response.options.map((option, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleOptionClick(index, i)}
+                    disabled={submitted}
+                    className={`flex flex-row items-start rounded-lg p-3 cursor-pointer group mb-4 ${
+                      submitted
+                        ? userAnswers[index] === i
+                          ? response.isCorrect
+                            ? 'bg-green-300'
+                            : 'bg-red-300'
                           : ''
-                      }`}
-                    >
-                      {option}
-                    </button>
-                  ))
-                ) : (
-                  <p style={{ color: 'red' }}>Options are not available.</p>
-                )}
+                        : userAnswers[index] === i
+                          ? 'bg-gray-200'
+                          : ''
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
               </div>
-              {Array.isArray(response.options) && (
-                <p style={{ display: 'none' }}>Correct Answer: {response.options[response.correct_option_index]}</p>
-              )}
             </div>
           ))}
+          {responses.length > 0 && (
+            <button onClick={handleSubmitResponses} disabled={submitted} className="px-4 py-2 bg-orange-500 text-white">Submit Answers</button>
+          )}
         </div>
       </div>
     </div>
@@ -155,6 +159,9 @@ const ChatGpt = () => {
 };
 
 export default ChatGpt;
+
+
+
 
 
 
