@@ -34,8 +34,7 @@ const Improvements = () => {
 
   return (
     <div className="max-w-4xl mx-auto py-10">
-      <div className="bg-white rounded-lg shadow-lg p-5">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">Topics to Review</h2>
+      <div>
         {error && <p className="text-red-500">{error}</p>}
         <ul className="list-disc pl-5">
           {topics.map((topic, index) => (
