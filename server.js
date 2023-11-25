@@ -10,7 +10,7 @@ import jwt from 'jsonwebtoken';
 dotenv.config();
 
 const openai = new OpenAI({
-  apiKey: "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", // Using environment variable for security
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 const app = express();
@@ -202,7 +202,6 @@ app.get('/profile', authenticateToken, async (req, res) => {
 });
 app.get('/topics-to-review', authenticateToken, async (req, res) => {
   const userId = req.user.userId;
-  console.log("Endpoint /topics-to-review hit by User ID:", userId); // Added for debugging
 
   try {
     const topicsWithWrongAnswers = await prisma.userQuestions.groupBy({
