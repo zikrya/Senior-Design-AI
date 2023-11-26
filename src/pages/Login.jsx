@@ -38,60 +38,81 @@ const Login = () => {
   };
 
   return (
-    <div className="leading-normal tracking-normal text-gray-900" style={{ fontFamily: "'Source Sans Pro', sans-serif" }}>
-      <div className="min-h-screen flex items-center justify-center bg-right bg-cover" style={{ backgroundImage: "url('bg.svg')" }}>
+    <div className="leading-normal tracking-normal text-gray-900" style={{
+      fontFamily: "'Source Sans Pro', sans-serif",
+      backgroundImage: "url('bg.svg')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed'
+    }}>
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="bg-white shadow-2xl rounded-3xl" style={{
+          maxWidth: '800px',
+          width: '100%',
+          margin: 'auto',
+          transform: 'translateY(-10%)'
+        }}>
+          <div className="flex" style={{ maxWidth: '800px', width: '100%', margin: 'auto', transform: 'translateY(0%)' }}>
+           
+            <div className="bg-indigo-800 text-white w-full md:w-1/2 p-8 text-center rounded-l-3xl">
+            <div className="flex flex-col justify-center h-full">
+            <h1 className="text-2xl md:text-3xl font-bold leading-tight mb-4">Welcome Back! </h1>
+            <p className="text-md md:text-lg font-light">Coding Simplified.</p>
+            <p className="text-md md:text-lg font-light">Learn, Practice,</p>
+            <p className="text-md md:text-lg font-light">Succeed.</p>
+          </div>
+        </div>
 
-        {/* Form */}
-        <form
-          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-          onSubmit={handleSubmit}
-        >
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="email"
-            >
-              Email
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="email"
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <div className="bg-white w-full md:w-1/2 p-8 rounded-r-3xl">
+            <form className="flex flex-col justify-between h-full" onSubmit={handleSubmit}>
+                <h2 className="text-2xl font-semibold text-gray-700 text-center mb-6">Login</h2>
+                
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    id="email"
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                
+                <div className="mb-6">
+                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                    Password
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    id="password"
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                
+                <div className="flex items-center justify-center">
+                  <button
+                    className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300"
+                    type="submit"
+                  >
+                    Login
+                  </button>
+                </div>
+
+                <p className="text-center mt-4">
+                  Don't have an account? <a href='/register' className="text-indigo-600 hover:text-indigo-800 transition duration-300 underline">Register</a>
+                </p>
+              </form>
+            </div>
           </div>
-          <div className="mb-6">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="password"
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div >
-          <div 
-          className="flex items-center justify-center bg-right bg-cover"
-          >
-            <button
-              className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="submit"
-            >
-              Login
-            </button>
-          </div>
-          <p style={{padding:"10px"}}>Don't have an account? <a href='/register' style={{textDecoration:"underline"}}>Register</a></p>
-        </form>
+        </div>
       </div>
     </div>
   );
