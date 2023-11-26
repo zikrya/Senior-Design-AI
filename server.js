@@ -10,7 +10,7 @@ import jwt from 'jsonwebtoken';
 dotenv.config();
 
 const openai = new OpenAI({
-  apiKey: "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",
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 const app = express();
