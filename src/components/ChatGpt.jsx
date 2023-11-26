@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+
 const ChatGpt = () => {
   const [prompt, setPrompt] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
@@ -16,7 +17,6 @@ const ChatGpt = () => {
       handleSubmit(null, location.state.topic);
     }
   }, [location]);
-
 
   const HTTP = "http://localhost:8020/chat";
 
@@ -45,20 +45,22 @@ const ChatGpt = () => {
   const handlePrompt = (e) => setPrompt(e.target.value);
   const handleDifficultyChange = (e) => setDifficulty(e.target.value);
 
-  const handleOptionClick = (responseIndex, selectedOptionIndex) => {
+  const handleOptionClick = (responseIndex, selectedOptionIndex, correctOptionIndex) => {
+    const isCorrect = selectedOptionIndex === correctOptionIndex;
     setUserAnswers({ ...userAnswers, [responseIndex]: selectedOptionIndex });
+    // Update the response immediately with the correctness
+    const updatedResponses = responses.map((response, index) => {
+      if (index === responseIndex) {
+        return { ...response, isCorrect, selectedOptionIndex: selectedOptionIndex };
+      }
+      return response;
+    });
+    setResponses(updatedResponses);
   };
 
   const handleSubmitResponses = () => {
-    const evaluatedResponses = responses.map((response, index) => {
-      const userAnswer = userAnswers[index];
-      const isCorrect = userAnswer === response.correct_option_index;
-      return { ...response, isCorrect, selectedOptionIndex: userAnswer };
-    });
-
-    setResponses(evaluatedResponses);
     setSubmitted(true);
-    handleSaveResponses(evaluatedResponses);
+    handleSaveResponses(responses);
   };
 
   const handleSaveResponses = (evaluatedResponses) => {
@@ -81,7 +83,6 @@ const ChatGpt = () => {
       setError('Error saving responses. Please try again.');
     });
   };
-
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -115,26 +116,26 @@ const ChatGpt = () => {
         {error && <p className="text-red-500 mb-4">{error}</p>}
 
         {responses.map((response, index) => (
-  <div key={index} className="mb-8">
-    <p className="text-lg font-semibold mb-2">{response.question_text}</p>
-    {response.options.map((option, i) => (
-      <button
-        key={i}
-        onClick={() => handleOptionClick(index, i)}
-        disabled={submitted}
-        className={`block w-full text-left px-4 py-2 border rounded-full mb-4
-                    ${submitted ?
-                      (userAnswers[index] === i ?
-                        (response.isCorrect ? 'bg-green-300' : 'bg-red-300')
-                        : 'bg-gray-100')
-                      : (userAnswers[index] === i ? 'bg-purple-300' : 'bg-gray-100')}
-                    hover:bg-purple-200`}
-      >
-        {option}
-      </button>
-    ))}
-  </div>
-))}
+          <div key={index} className="mb-8">
+            <p className="text-lg font-semibold mb-2">{response.question_text}</p>
+            {response.options.map((option, i) => (
+              <button
+                key={i}
+                onClick={() => handleOptionClick(index, i, response.correct_option_index)}
+                disabled={submitted}
+                className={`block w-full text-left px-4 py-2 border rounded-full mb-4
+                            ${submitted ?
+                              (userAnswers[index] === i ?
+                                (response.isCorrect ? 'bg-green-300' : 'bg-red-300')
+                                : 'bg-gray-100')
+                              : (userAnswers[index] === i ? 'bg-purple-300' : 'bg-gray-100')}
+                            hover:bg-purple-200`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        ))}
 
         {responses.length > 0 && (
           <button
@@ -151,4 +152,5 @@ const ChatGpt = () => {
 };
 
 export default ChatGpt;
+
 
