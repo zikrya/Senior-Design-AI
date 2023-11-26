@@ -13,7 +13,7 @@ const Profile = () => {
     // Fetch user data from the server
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('http://localhost:8020/profile', {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/profile`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}` // Assuming token is stored in localStorage
           }

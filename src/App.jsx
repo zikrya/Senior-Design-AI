@@ -28,7 +28,7 @@ function App() {
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        const response = await fetch('http://localhost:8020/protected-route', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/protected-route`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

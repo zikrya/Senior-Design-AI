@@ -37,7 +37,7 @@ const Dashboard = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:8020/user-questions', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/user-questions`, {
         headers: {
           Authorization: `Bearer ${token}`, // Include your actual access token
         },

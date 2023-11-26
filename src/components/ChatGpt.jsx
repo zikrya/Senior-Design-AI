@@ -18,7 +18,9 @@ const ChatGpt = () => {
     }
   }, [location]);
 
-  const HTTP = "http://localhost:8020/chat";
+  const HTTP = import.meta.env.VITE_API_URL + "/chat";
+
+
 
   const handleSubmit = (e, retryTopic) => {
     if (e) e.preventDefault();
@@ -70,7 +72,7 @@ const ChatGpt = () => {
       return;
     }
 
-    axios.post('http://localhost:8020/save-questions', { questions: evaluatedResponses, topic: prompt }, {
+    axios.post(`${import.meta.env.VITE_API_URL}/save-questions`, { questions: evaluatedResponses, topic: prompt }, {
       headers: {
         Authorization: `Bearer ${token}`
       }

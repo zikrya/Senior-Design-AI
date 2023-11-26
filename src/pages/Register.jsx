@@ -13,7 +13,7 @@ const Register = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8020/register', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ const Register = () => {
 
   const login = async () => {
     try {
-      const response = await fetch('http://localhost:8020/login', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ const Register = () => {
           width: '100%',
           margin: 'auto',
           transform: 'translateY(3%)',
-          maxHeight: '90vh' 
+          maxHeight: '90vh'
         }}>
           <div className="bg-indigo-800 text-white w-1/2 py-8 px-4 rounded-l-3xl">
             <div className="flex flex-col justify-center h-full">
@@ -85,11 +85,11 @@ const Register = () => {
               <p className="text-md md:text-lg font-light text-center">Get started with us today!</p>
             </div>
           </div>
-  
+
           <div className="bg-white w-full md:w-1/2 rounded-r-3xl" style={{ padding: '1em 4rem' }}>
   <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
               <h2 className="text-2xl font-semibold text-gray-700 text-center mb-1">Register</h2>
-              
+
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                   Email
@@ -104,7 +104,7 @@ const Register = () => {
                   required
                 />
               </div>
-              
+
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstName">
                   First Name
@@ -119,7 +119,7 @@ const Register = () => {
                   required
                 />
               </div>
- 
+
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastName">
                   Last Name
@@ -149,7 +149,7 @@ const Register = () => {
                   required
                 />
               </div>
-              
+
               <div className="mb-6">
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                   Password
@@ -164,7 +164,7 @@ const Register = () => {
                   required
                 />
               </div>
-              
+
               <div className="flex items-center justify-center">
                 <button
                   className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -179,7 +179,7 @@ const Register = () => {
       </div>
     </div>
   );
-  
+
 };
 
 export default Register;

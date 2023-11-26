@@ -10,7 +10,7 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8020/login', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ const Login = () => {
           transform: 'translateY(-10%)'
         }}>
           <div className="flex" style={{ maxWidth: '800px', width: '100%', margin: 'auto', transform: 'translateY(0%)' }}>
-           
+
             <div className="bg-indigo-800 text-white w-full md:w-1/2 p-8 text-center rounded-l-3xl">
             <div className="flex flex-col justify-center h-full">
             <h1 className="text-2xl md:text-3xl font-bold leading-tight mb-4">Welcome Back! </h1>
@@ -66,7 +66,7 @@ const Login = () => {
             <div className="bg-white w-full md:w-1/2 p-8 rounded-r-3xl">
             <form className="flex flex-col justify-between h-full" onSubmit={handleSubmit}>
                 <h2 className="text-2xl font-semibold text-gray-700 text-center mb-6">Login</h2>
-                
+
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                     Email
@@ -81,7 +81,7 @@ const Login = () => {
                     required
                   />
                 </div>
-                
+
                 <div className="mb-6">
                   <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                     Password
@@ -96,7 +96,7 @@ const Login = () => {
                     required
                   />
                 </div>
-                
+
                 <div className="flex items-center justify-center">
                   <button
                     className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300"

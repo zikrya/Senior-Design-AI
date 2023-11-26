@@ -220,7 +220,7 @@ app.get('/topics-to-review', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Error fetching topics to review' });
   }
 });
-const PORT = 8020;
+const PORT = process.env.PORT || 8020;
 
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);

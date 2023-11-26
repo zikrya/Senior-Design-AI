@@ -14,7 +14,7 @@ const Improvements = () => {
       return;
     }
 
-    axios.get('http://localhost:8020/topics-to-review', {
+    axios.get(`${import.meta.env.VITE_API_URL}/topics-to-review`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
