@@ -72,7 +72,10 @@ const Navbar = () => {
 
   const navigation = [
     { name: 'Home', href: '/', current: false },
-    ...(!isAuthenticated ? [{ name: 'Login', href: '/login', current: false }] : []),
+    ...(!isAuthenticated ? [
+      { name: 'Login', href: '/login', current: false },
+      { name: 'Register', href: '/register', current: false }
+    ] : []),
     { name: 'Questions', href: '/quiz', current: false },
     { name: 'Dashboard', href: '/dashboard', current: false },
   ];
