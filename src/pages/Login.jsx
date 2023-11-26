@@ -24,9 +24,9 @@ const Login = () => {
 
         // Store the JWT token in local storage
         localStorage.setItem('token', data.token);
-
-        navigate('/'); // Redirect to home page or dashboard
-        window.location.reload(); // Refreshes the page
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 100);
       } else {
         console.error('Login failed', data.message);
         // Display error message to the user (consider adding state for this)

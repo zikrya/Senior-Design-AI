@@ -24,10 +24,38 @@ const Register = () => {
       const data = await response.json();
       if (response.ok) {
         console.log('Registration successful', data);
-        navigate('/');
+        login();
         // Redirect to login page or display success message
       } else {
         console.error('Registration failed', data.message);
+        // Display error message to the user
+      }
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
+  };
+
+  const login = async () => {
+    try {
+      const response = await fetch('http://localhost:8020/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Login successful', data);
+
+        // Store the JWT token in local storage
+        localStorage.setItem('token', data.token);
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 100);
+      } else {
+        console.error('Login failed', data.message);
         // Display error message to the user
       }
     } catch (error) {
