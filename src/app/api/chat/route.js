@@ -1,7 +1,6 @@
 import OpenAI from "openai";
 import { openai } from "../../../server/openai";
 
-export const maxRuntime = 300;
 
 export const POST = async (req) => {
     try {
