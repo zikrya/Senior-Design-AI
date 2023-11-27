@@ -26,29 +26,44 @@ app.use(cors(corsOptions));
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-app.post("/chat", async (req,res) => {
-    try {
-      const { topic, difficulty } = req.body;
+app.get("/status", async (req, res) => {
+  try {
+    const users = await prisma.user.count();
+    res.json({ success: true, data: { users } });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: {
+        message: "message" in error ? error.message : "An unknown error occurred.",
+        cause: error
+      }
+    });
+  }
+});
 
-      const openaiPrompt = `Create a JSON array of ${difficulty} level of difficulty 5 multiple-choice questions about '${topic}' suitable for a quiz. Each object in the array should include the question text, an array of options prefixed with 'A', 'B', 'C', and 'D', and the correct option index. Ensure the correct option is at the index specified in the 'correct_option_index' field.`
+app.post("/chat", async (req, res) => {
+  try {
+    const { topic, difficulty } = req.body;
 
-        const completion = await openai.completions.create({
-            model: "text-davinci-003",
-            max_tokens: 512,
-            temperature: 0,
-            prompt: openaiPrompt,
-        });
-        res.send(completion.choices[0].text);
-    } catch (error) {
-        if (error instanceof OpenAI.APIError) {
-            console.error(error.status);
-            console.error(error.message);
-            res.status(error.status).send(error.message);
-        } else {
-            console.log(error);
-            res.status(500).send('Internal Server Error');
-        }
+    const openaiPrompt = `Create a JSON array of ${difficulty} level of difficulty 5 multiple-choice questions about '${topic}' suitable for a quiz. Each object in the array should include the question text, an array of options prefixed with 'A', 'B', 'C', and 'D', and the correct option index. Ensure the correct option is at the index specified in the 'correct_option_index' field.`
+
+    const completion = await openai.completions.create({
+      model: "text-davinci-003",
+      max_tokens: 512,
+      temperature: 0,
+      prompt: openaiPrompt,
+    });
+    res.send(completion.choices[0].text);
+  } catch (error) {
+    if (error instanceof OpenAI.APIError) {
+      console.error(error.status);
+      console.error(error.message);
+      res.status(error.status).send(error.message);
+    } else {
+      console.log(error);
+      res.status(500).send('Internal Server Error');
     }
+  }
 });
 
 const saltRounds = 10;
@@ -93,37 +108,37 @@ const authenticateToken = (req, res, next) => {
   if (token == null) return res.sendStatus(401);
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
-      if (err) return res.sendStatus(403);
-      req.user = user;
-      next();
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
   });
 };
 
 app.post('/login', async (req, res) => {
   try {
-      const { email, password } = req.body;
+    const { email, password } = req.body;
 
-      const user = await prisma.user.findUnique({
-          where: { email },
-      });
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
 
-      if (!user) {
-          return res.status(404).json({ message: 'User not found' });
-      }
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-      const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
 
-      if (!isMatch) {
-          return res.status(401).json({ message: 'Invalid credentials' });
-      }
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
 
-      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
 
-      res.json({ message: 'Login successful', token });
+    res.json({ message: 'Login successful', token });
 
   } catch (error) {
-      console.error('Login error:', error);
-      res.status(500).json({ message: 'Error logging in user' });
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Error logging in user' });
   }
 });
 app.get('/protected-route', authenticateToken, (req, res) => {
@@ -228,7 +243,7 @@ app.get('/topics-to-review', authenticateToken, async (req, res) => {
 const PORT = process.env.PORT || 8020;
 
 app.listen(PORT, () => {
-    console.log(`Server running on port: ${PORT}`);
+  console.log(`Server running on port: ${PORT}`);
 });
 
 
