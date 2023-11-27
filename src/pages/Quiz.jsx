@@ -2,10 +2,8 @@ import ChatGpt from "../components/ChatGpt";
 
 const Quiz = () => {
     return (
-        <>
-        <ChatGpt/>
-        </>
-     );
+        <ChatGpt />
+    );
 }
 
 export default Quiz;
