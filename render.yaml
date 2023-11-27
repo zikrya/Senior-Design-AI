@@ -1,0 +1,10 @@
+services:
+- type: static-site
+  name: tutortech-ai  # Replace with your actual service name on Render
+  env: static
+  buildCommand: npm run build  # Your build command
+  staticPublishPath: dist  # The directory where your static files are output by Vite
+  routes:
+    - type: rewrite
+      source: /**  # This matches all paths
+      destination: /index.html  # Redirects all paths to index.html
