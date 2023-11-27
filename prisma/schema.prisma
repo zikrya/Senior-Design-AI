@@ -18,16 +18,16 @@ model User {
 }
 
 model Question {
-  id            Int             @id @default(autoincrement())
-  text          String
-  topic         String
+  id    Int    @id @default(autoincrement())
+  text  String
+  topic String
 }
 
 model UserQuestions {
   id                  Int      @id @default(autoincrement())
   userId              Int
   questionText        String
-  options             Json     // Changed from String[] to Json
+  options             Json // Changed from String[] to Json
   correctOptionIndex  Int
   selectedOptionIndex Int?
   isCorrect           Boolean?
@@ -36,5 +36,3 @@ model UserQuestions {
   user                User     @relation(fields: [userId], references: [id])
   topic               String
 }
-
-
