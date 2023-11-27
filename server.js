@@ -16,8 +16,13 @@ const openai = new OpenAI({
 const app = express();
 const prisma = new PrismaClient();
 
+const corsOptions = {
+  origin: 'https://tutortech-ai.onrender.com/',
+  credentials: true,
+}
+
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
