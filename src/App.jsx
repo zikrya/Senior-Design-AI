@@ -10,6 +10,7 @@ import Navbar from './components/navbar'
 import Quiz from './pages/Quiz';
 import React, { useState, useEffect } from 'react';
 import Profile from './pages/Profile';
+import Test from './pages/Test';
 
 const PrivateRoute = ({ element, isAuthenticated, ...rest }) => {
   return isAuthenticated ? (
@@ -48,7 +49,7 @@ function App() {
     checkAuthentication();
   }, []);
 
-  // Show a loading spinner or some indicator while checking authentication
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -61,6 +62,7 @@ function App() {
           <Route exact path="/" element={<Home/>} />
           <Route exact path="/login" element={<Login/>} />
           <Route exact path="/register" element={<Register/>} />
+          <Route exact path="/test" element={<Test/>} />
           <Route path="/dashboard" element={<PrivateRoute element={<Dashboard />} isAuthenticated={isAuthenticated} />} />
           <Route path="/quiz" element={<PrivateRoute element={<Quiz />} isAuthenticated={isAuthenticated} />} />
           <Route path="/profile" element={<PrivateRoute element={<Profile/>} isAuthenticated={isAuthenticated} />} />
