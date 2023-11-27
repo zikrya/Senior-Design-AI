@@ -10,7 +10,7 @@ import Navbar from './components/navbar'
 import Quiz from './pages/Quiz';
 import React, { useState, useEffect } from 'react';
 import Profile from './pages/Profile';
-import Test from './pages/Test';
+
 
 const PrivateRoute = ({ element, isAuthenticated, ...rest }) => {
   return isAuthenticated ? (
