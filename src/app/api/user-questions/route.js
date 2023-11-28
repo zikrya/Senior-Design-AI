@@ -8,10 +8,9 @@ export const GET = async (req) => {
 
         const userQuestions = await prisma.userQuestions.findMany({
             where: {
-                userId: user.userid
+                userId: user.userId
             }
         });
-
         return NextResponse.json(userQuestions);
     } catch (error) {
         console.error('Error fetching user questions:', error);
