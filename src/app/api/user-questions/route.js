@@ -8,7 +8,7 @@ export const GET = async (req) => {
 
         const userQuestions = await prisma.userQuestions.findMany({
             where: {
-                userId: user.id
+                userId: user.userid
             }
         });
 
