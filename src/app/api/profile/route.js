@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { authenticate } from "../../../lib/jwt";
+import { prisma } from "../../../server/db";
 
 export const GET = async () => {
     try {
@@ -13,7 +14,7 @@ export const GET = async () => {
 
         const userProfile = await prisma.user.findUnique({
             where: {
-                id: user.id
+                id: user.userId
             }
         });
 

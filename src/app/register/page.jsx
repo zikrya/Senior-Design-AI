@@ -9,6 +9,7 @@ const Register = () => {
     const [college, setCollege] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -30,9 +31,13 @@ const Register = () => {
                 setIsLoading(false);
                 // Redirect to login page or display success message
             } else {
-                console.error('Registration failed', data.message);
-                // Display error message to the user
-                setIsLoading(false);
+                if (response.status === 400) {
+                    console.error('Registration failed - Email already exists', data.message);
+                    setErrorMessage('This email is already in use.');
+                  } else {
+                    console.error('Registration failed', data.message);
+                    // Handle other registration failures
+                  }
             }
         } catch (error) {
             console.error('There was an error!', error);
@@ -58,7 +63,7 @@ const Register = () => {
                 localStorage.setItem('token', data.token);
                 setTimeout(() => {
                     window.location.href = '/';
-                }, 100);
+                }, 50);
             } else {
                 console.error('Login failed', data.message);
                 // Display error message to the user
@@ -94,7 +99,7 @@ const Register = () => {
                     <div className="bg-white w-full md:w-1/2 rounded-r-3xl" style={{ padding: '1em 4rem' }}>
                         <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
                             <h2 className="text-2xl font-semibold text-gray-700 text-center mb-1">Register</h2>
-
+                            <div className="text-red-600 mb-4">{errorMessage}</div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                                     Email
