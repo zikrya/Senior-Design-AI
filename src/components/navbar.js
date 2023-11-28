@@ -88,7 +88,7 @@ const Navbar = () => {
                                 <div className="hidden sm:ml-6 sm:block">
                                     <div className="flex space-x-4">
                                         {navigation.map((item) => (
-                                            (item.name === 'Questions' || item.name === 'Dashboard' || item.name === 'Info') && !isAuthenticated ? null : (
+                                            (item.name === 'Questions' || item.name === 'Dashboard' || item.name === 'Assistance') && !isAuthenticated ? null : (
                                                 <a
                                                     key={item.name}
                                                     href={item.href}
