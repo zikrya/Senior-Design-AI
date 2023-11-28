@@ -4,7 +4,7 @@ import { openai } from "../../../server/openai";
 
 export const POST = async (req) => {
     try {
-        const { topic, difficulty } = await req.json();
+        const {help} = await req.json();
 
         const openaiPrompt = `Please give a detailed explanations on the CS topic ${help}, and provide examples`
 

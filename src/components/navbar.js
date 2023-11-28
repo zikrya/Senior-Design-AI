@@ -55,6 +55,7 @@ const Navbar = () => {
             { name: 'Register', href: '/register', current: false }
         ] : []),
         { name: 'Questions', href: '/quiz', current: false },
+        { name: 'Assistance', href: '/info', current: false },
         { name: 'Dashboard', href: '/dashboard', current: false },
     ];
 
@@ -87,7 +88,7 @@ const Navbar = () => {
                                 <div className="hidden sm:ml-6 sm:block">
                                     <div className="flex space-x-4">
                                         {navigation.map((item) => (
-                                            (item.name === 'Questions' || item.name === 'Dashboard') && !isAuthenticated ? null : (
+                                            (item.name === 'Questions' || item.name === 'Dashboard' || item.name === 'Info') && !isAuthenticated ? null : (
                                                 <a
                                                     key={item.name}
                                                     href={item.href}
