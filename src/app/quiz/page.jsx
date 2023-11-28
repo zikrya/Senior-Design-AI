@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import withAuth from '../../components/authHoc';
+
 
 
 
@@ -206,4 +208,4 @@ const ChatGpt = () => {
     );
 };
 
-export default ChatGpt;
+export default withAuth(ChatGpt);

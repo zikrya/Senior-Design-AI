@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import withAuth from '../../components/authHoc';
 import axios from 'axios';
 
 const Profile = () => {
@@ -63,4 +64,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default withAuth(Profile);
