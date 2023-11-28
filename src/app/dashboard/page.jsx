@@ -3,6 +3,9 @@
 import Chart from 'chart.js/auto';
 import React, { useEffect, useState } from 'react';
 import Improvements from '../../components/improvements';
+import withAuth from '../../components/authHoc';
+import axios from 'axios';
+
 
 // ErrorBoundary component to catch and handle errors
 class ErrorBoundary extends React.Component {
@@ -406,4 +409,4 @@ const Dashboard = () => {
 };
 
 
-export default Dashboard;
+export default withAuth(Dashboard);
