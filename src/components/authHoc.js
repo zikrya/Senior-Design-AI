@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-//import Router from 'next/navigation';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 const withAuth = (WrappedComponent) => {
     return (props) => {
         const [verified, setVerified] = useState(false);
+        const [loading, setLoading] = useState(true);
         const router = useRouter();
 
         useEffect(() => {
@@ -15,17 +15,24 @@ const withAuth = (WrappedComponent) => {
                     if (!token) {
                         throw new Error('No token found');
                     }
-                    await axios.get('/api/verifyToken', { headers: { Authorization: `Bearer ${token}` } });
-                    setVerified(true);
+                    const response = await axios.get('/api/protected-route', { headers: { Authorization: `Bearer ${token}` } });
+
+                    if (response.status === 200) {
+                        setVerified(true);
+                    } else {
+                        throw new Error('Invalid token');
+                    }
                 } catch (error) {
                     router.push('/login');
+                } finally {
+                    setLoading(false);
                 }
             };
 
             verifyToken();
-        }, []);
+        }, [router]);
 
-        if (!verified) {
+        if (loading) {
             return(
                 <>
                 <svg aria-hidden="true" class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-purple-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -37,8 +44,13 @@ const withAuth = (WrappedComponent) => {
             );
         }
 
+        if (!verified) {
+            return null;
+        }
+
         return <WrappedComponent {...props} />;
     };
 };
 
 export default withAuth;
+
